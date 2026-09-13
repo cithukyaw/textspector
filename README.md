@@ -43,15 +43,15 @@ OPENROUTER_API_KEY=your_openrouter_api_key_here
 VITE_PROVIDER=openrouter
 
 # OpenRouter Model Settings (Public configuration)
-VITE_OPENROUTER_DEFAULT_MODEL=nvidia/nemotron-3-ultra:free
-# Optional: comma-separated list of models to prioritize for OpenRouter fallback/routing
-VITE_OPENROUTER_MODELS=nvidia/nemotron-3-ultra:free,google/gemma-4-31b:free,openai/gpt-oss-120b:free,meta-llama/llama-4-scout:free,openrouter/free
+VITE_OPENROUTER_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free
+# Comma-separated list of models to prioritize for OpenRouter fallback/routing (optional)
+VITE_OPENROUTER_MODELS=nvidia/nemotron-3-ultra-550b-a55b:free,google/gemma-4-31b-it:free,openrouter/free
 
-# Ollama Settings (Optional, when VITE_PROVIDER=ollama)
+# Ollama Settings (Optional, for local models)
 VITE_OLLAMA_BASE_URL=http://localhost:11434
 VITE_OLLAMA_DEFAULT_MODEL=qwen3:1.7b
-# Optional: comma-separated list of models to populate in the Ollama UI selector
-VITE_OLLAMA_MODELS=qwen3:1.7b,llama3.2:latest,qwen2.5:14b,deepseek-r1:14b,mistral
+# Comma-separated model list for the Ollama UI selector
+VITE_OLLAMA_MODELS=qwen3:1.7b,llama3.2:latest,qwen2.5:14b,qwen2.5:7b,deepseek-r1:14b,mistral
 ```
 
 ---
@@ -60,18 +60,18 @@ VITE_OLLAMA_MODELS=qwen3:1.7b,llama3.2:latest,qwen2.5:14b,deepseek-r1:14b,mistra
 
 ### 1. Install Dependencies
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Run Locally in Development
 ```bash
-npm run dev
+bun run dev
 ```
 The application will start on `http://localhost:3000`.
 
 ### 3. Build for Production
 ```bash
-npm run build
+bun run build
 ```
 
 ---
@@ -95,6 +95,11 @@ To use TextSpector completely offline with a local model:
 1. Launch Ollama with CORS enabled:
    ```bash
    OLLAMA_ORIGINS="*" ollama serve
+   ```
+   Windows Powershell:
+   ```bash
+   $env:OLLAMA_ORIGINS="*"
+   ollama serve
    ```
 2. Pull your preferred model (e.g. `ollama pull qwen3:1.7b`).
 3. Set `VITE_PROVIDER=ollama` in your `.env` file.

@@ -1,41 +1,4 @@
-import type { IncomingMessage, ServerResponse } from 'http';
-
-const SYSTEM_PROMPT = `You are an AI text detection assistant. Analyze the provided text to see if it was written by an AI or a human.
-Look for:
-1. Word choice variety (whether words are predictable or natural).
-2. Sentence rhythm (whether sentence lengths vary naturally or are all similar).
-3. Common AI habits (repetitive phrases like "delve into", "tapestry", "in conclusion", "furthermore").
-
-Explain your reasoning in plain, easy-to-understand English without using complicated jargon.
-
-Return your final output STRICTLY as a valid JSON object matching this schema:
-{
-  "overallScore": number (0 to 100, where 100 is definitely AI),
-  "verdict": "Likely Human" | "Mixed / Edited" | "Likely AI",
-  "reasoning": string (clear, simple explanation for normal readers),
-  "metrics": {
-    "perplexityScore": "Low" | "Medium" | "High",
-    "burstinessScore": "Low" | "Medium" | "High",
-    "repetitivePhrasing": boolean
-  },
-  "flaggedPhrases": [string],
-  "paragraphAnalysis": [
-    {
-      "paragraphIndex": number,
-      "score": number,
-      "note": string (short plain-English comment)
-    }
-  ]
-}
-Do not include markdown code block formatting in your JSON output if possible.`;
-
-const DEFAULT_MODELS = [
-  'nvidia/nemotron-3-ultra:free',
-  'google/gemma-4-31b:free',
-  'openai/gpt-oss-120b:free',
-  'meta-llama/llama-4-scout:free',
-  'openrouter/free',
-];
+import { SYSTEM_PROMPT, parseDetectorResponse } from '../src/utils/detector.ts';
 
 function getOpenRouterModelList(): string[] {
   const envModels =
@@ -52,25 +15,12 @@ function getOpenRouterModelList(): string[] {
     }
   }
 
-  return DEFAULT_MODELS;
-}
-
-function cleanAndParseJSON(raw: string) {
-  let cleaned = raw.trim();
-  if (cleaned.startsWith('```')) {
-    cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
-  }
-  const firstBrace = cleaned.indexOf('{');
-  const lastBrace = cleaned.lastIndexOf('}');
-  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
-  }
-  return JSON.parse(cleaned);
+  return [];
 }
 
 /**
  * Vercel Serverless Function & Express Proxy Endpoint: POST /api/detect
- * 
+ *
  * Securely proxies AI detection requests to OpenRouter.
  * The OPENROUTER_API_KEY is retrieved exclusively on the server side,
  * keeping it completely private from the client application.
@@ -134,8 +84,15 @@ export default async function handler(req: any, res: any) {
   const selectedModel =
     model ||
     process.env.VITE_OPENROUTER_DEFAULT_MODEL ||
-    configuredModels[0] ||
-    'nvidia/nemotron-3-ultra:free';
+    configuredModels[0];
+
+  if (!selectedModel) {
+    res.status(400).json({
+      error: 'MISSING_OPENROUTER_MODELS',
+      message: 'No OpenRouter model configured. Set VITE_OPENROUTER_MODELS (comma-separated) or VITE_OPENROUTER_DEFAULT_MODEL in the environment.',
+    });
+    return;
+  }
 
   const modelsList = [
     selectedModel,
@@ -194,53 +151,11 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    const parsed = cleanAndParseJSON(content);
+    const parsed = parseDetectorResponse(content);
+    parsed.modelUsed = data.model || selectedModel;
+    parsed.analyzedAt = new Date().toLocaleTimeString();
 
-    const overallScore =
-      typeof parsed.overallScore === 'number'
-        ? Math.max(0, Math.min(100, Math.round(parsed.overallScore)))
-        : 50;
-
-    let verdict = 'Mixed / Edited';
-    if (parsed.verdict === 'Likely Human' || parsed.verdict === 'Likely AI' || parsed.verdict === 'Mixed / Edited') {
-      verdict = parsed.verdict;
-    } else {
-      if (overallScore < 35) verdict = 'Likely Human';
-      else if (overallScore > 65) verdict = 'Likely AI';
-      else verdict = 'Mixed / Edited';
-    }
-
-    const result = {
-      overallScore,
-      verdict,
-      reasoning:
-        typeof parsed.reasoning === 'string' && parsed.reasoning.length > 0
-          ? parsed.reasoning
-          : 'Forensic linguistic analysis evaluated vocabulary variance, sentence length regularity, and structural markers.',
-      metrics: {
-        perplexityScore: ['Low', 'Medium', 'High'].includes(parsed.metrics?.perplexityScore)
-          ? parsed.metrics.perplexityScore
-          : 'Medium',
-        burstinessScore: ['Low', 'Medium', 'High'].includes(parsed.metrics?.burstinessScore)
-          ? parsed.metrics.burstinessScore
-          : 'Medium',
-        repetitivePhrasing: Boolean(parsed.metrics?.repetitivePhrasing),
-      },
-      flaggedPhrases: Array.isArray(parsed.flaggedPhrases)
-        ? parsed.flaggedPhrases.filter((p: unknown) => typeof p === 'string' && p.trim().length > 0)
-        : [],
-      paragraphAnalysis: Array.isArray(parsed.paragraphAnalysis)
-        ? parsed.paragraphAnalysis.map((p: any, idx: number) => ({
-            paragraphIndex: typeof p.paragraphIndex === 'number' ? p.paragraphIndex : idx + 1,
-            score: typeof p.score === 'number' ? Math.max(0, Math.min(100, Math.round(p.score))) : overallScore,
-            note: typeof p.note === 'string' ? p.note : 'Forensic evaluation evaluated.',
-          }))
-        : [],
-      modelUsed: data.model || selectedModel,
-      analyzedAt: new Date().toLocaleTimeString(),
-    };
-
-    res.status(200).json(result);
+    res.status(200).json(parsed);
   } catch (err: any) {
     res.status(500).json({
       error: err.message || 'An unexpected error occurred during detection processing.',

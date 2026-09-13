@@ -1,14 +1,14 @@
 /**
  * Ollama AI Text Detection Service
- * 
+ *
  * Interacts with a local Ollama instance running at VITE_OLLAMA_BASE_URL.
  * Requires CORS enabled via `OLLAMA_ORIGINS="*"`.
  */
 
 import axios from 'axios';
-import { APP_CONFIG, SYSTEM_PROMPT } from '../config';
-import { DetectorResult } from '../types/detector';
-import { parseDetectorResponse } from '../utils/jsonParser';
+import { APP_CONFIG } from '../config';
+import type { DetectorResult } from '../types/detector';
+import { SYSTEM_PROMPT, parseDetectorResponse } from '../utils/detector.ts';
 
 export async function analyzeTextWithOllama(text: string, model?: string): Promise<DetectorResult> {
   const baseUrl = APP_CONFIG.ollama.baseUrl.replace(/\/+$/, '');
