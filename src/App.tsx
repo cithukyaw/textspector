@@ -6,11 +6,10 @@ import { ResultsDashboard } from './components/ResultsDashboard';
 import { APP_CONFIG } from './config';
 import { DetectorResult } from './types/detector';
 import { detectAiText } from './services/detectorService';
-import { SAMPLE_TEXTS } from './data/sampleTexts';
 import { Sparkles, BookOpen } from 'lucide-react';
 
 export default function App() {
-  const [text, setText] = useState<string>(SAMPLE_TEXTS[0].text);
+  const [text, setText] = useState<string>('');
   const [selectedOllamaModel, setSelectedOllamaModel] = useState<string>(
     APP_CONFIG.ollama.defaultModel
   );
@@ -117,7 +116,7 @@ export default function App() {
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-xs"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
-                <span>Check the loaded sample</span>
+                <span>Check the loaded text</span>
               </button>
             </div>
           </div>

@@ -17,6 +17,12 @@ export const TextInputArea: React.FC<TextInputAreaProps> = ({
   isLoading,
   onClear,
 }) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   const charCount = text.length;
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
   const paragraphCount = text.trim()
@@ -80,6 +86,7 @@ export const TextInputArea: React.FC<TextInputAreaProps> = ({
           Text to analyze for AI patterns
         </label>
         <textarea
+          ref={textareaRef}
           id="detector-input-textarea"
           rows={7}
           value={text}

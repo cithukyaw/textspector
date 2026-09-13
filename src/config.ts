@@ -1,6 +1,6 @@
 /**
  * Client-Side SPA Configuration
- * 
+ *
  * SECURITY WARNING:
  * This application is configured as a client-side SPA per the project specification (AGENTS.md).
  * Note that third-party API keys (e.g. VITE_OPENROUTER_API_KEY) in client-side bundles are visible
