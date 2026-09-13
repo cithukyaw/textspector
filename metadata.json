@@ -1,0 +1,7 @@
+{
+  "name": "textspector",
+  "description": "An easy-to-use tool to check if text was written by AI or a human, with simple scores and sentence highlights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
