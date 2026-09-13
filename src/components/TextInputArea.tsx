@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Sparkles, Trash2, Loader2, FileText } from 'lucide-react';
 import { SAMPLE_TEXTS, SampleText } from '../data/sampleTexts';
 
@@ -42,42 +42,23 @@ export const TextInputArea: React.FC<TextInputAreaProps> = ({
     <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
       {/* Sample Selector Bar */}
       <div className="bg-slate-50/80 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-          <FileText className="w-3.5 h-3.5 text-slate-500" />
-          <span>Try an example:</span>
+        <div className="flex items-center gap-1.5 font-semibold text-slate-600">
+          <FileText className="w-4.5 h-4.5 text-slate-500" />
+          <span className="py-1">Type or paste your text</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          {SAMPLE_TEXTS.map((sample) => (
-            <button
-              key={sample.id}
-              id={`load-sample-${sample.id}`}
-              type="button"
-              onClick={() => handleSelectSample(sample)}
-              className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-all ${
-                sample.type === 'ai'
-                  ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
-                  : sample.type === 'human'
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                  : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-              }`}
-            >
-              {sample.title}
-            </button>
-          ))}
-          {text.trim().length > 0 && (
-            <button
-              id="clear-text-btn"
-              type="button"
-              onClick={onClear}
-              disabled={isLoading}
-              className="px-2 py-1 text-xs font-medium rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all flex items-center gap-1"
-            >
-              <Trash2 className="w-3 h-3" />
-              <span>Clear</span>
-            </button>
-          )}
-        </div>
+        {text.trim().length > 0 && (
+          <button
+            id="clear-text-btn"
+            type="button"
+            onClick={onClear}
+            disabled={isLoading}
+            className="px-2 py-1 text-xs font-medium rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all flex items-center gap-1"
+          >
+            <Trash2 className="w-3 h-3" />
+            <span>Clear</span>
+          </button>
+        )}
       </div>
 
       {/* Main Textarea */}
@@ -96,8 +77,29 @@ export const TextInputArea: React.FC<TextInputAreaProps> = ({
           className="w-full text-sm sm:text-base text-slate-900 placeholder:text-slate-400 bg-transparent border-0 focus:outline-none resize-y min-h-[160px] leading-relaxed font-sans"
         />
 
+        <div className="mt-2 px-4 py-2.5 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
+          <span className="text-sm text-slate-600 font-semibold">Try an example:</span>
+          {SAMPLE_TEXTS.map((sample) => (
+            <button
+              key={sample.id}
+              id={`load-sample-${sample.id}`}
+              type="button"
+              onClick={() => handleSelectSample(sample)}
+              className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition-all ${
+                sample.type === 'ai'
+                  ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                  : sample.type === 'human'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+              }`}
+            >
+              {sample.title}
+            </button>
+          ))}
+        </div>
+
         {/* Footer info & Analyze Action */}
-        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Metrics / Word count */}
           <div className="flex items-center gap-4 text-xs font-medium text-slate-500">
             <span>
