@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShieldCheck, Cpu, Server } from 'lucide-react';
+import { Cpu, Server } from 'lucide-react';
 import { APP_CONFIG } from '../config';
+import logo from '../img/logo.png';
 
 interface HeaderProps {
   selectedOllamaModel: string;
@@ -20,13 +21,14 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo and Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-sm">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
-          </div>
+          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-sm overflow-hidden">
+              <img src={logo} alt="" className="w-full h-full object-contain" />
+            </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-none">
-                TextSpector
+                <span className="text-slate-900">Text</span>
+                <span className="text-emerald-700">Spector</span>
               </h1>
               <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                 AI Checker
