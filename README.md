@@ -17,7 +17,7 @@ Built with **React 19**, **TypeScript**, **Tailwind CSS**, and **Vite**, TextSpe
 - **Paragraph-by-Paragraph Breakdown**: An interactive bar chart and easy-to-read notes explaining each paragraph.
 - **Flexible Setup**:
   - **OpenRouter (Default)**: Connects safely through `POST /api/detect` so your private API key is never exposed to the browser.
-  - **Ollama Mode**: Run completely offline using open-source models (like `qwen3:7b`, `llama3.2`, etc.) on your own computer.
+  - **Ollama Mode**: Run completely offline using open-source models (like `qwen3:1.7b`, `llama3.2`, etc.) on your own computer.
   - **Instant Offline Mode**: Check sample texts immediately in the browser without any setup or API keys.
 
 ---
@@ -49,9 +49,9 @@ VITE_OPENROUTER_MODELS=nvidia/nemotron-3-ultra:free,google/gemma-4-31b:free,open
 
 # Ollama Settings (Optional, when VITE_PROVIDER=ollama)
 VITE_OLLAMA_BASE_URL=http://localhost:11434
-VITE_OLLAMA_DEFAULT_MODEL=qwen3:7b
+VITE_OLLAMA_DEFAULT_MODEL=qwen3:1.7b
 # Optional: comma-separated list of models to populate in the Ollama UI selector
-VITE_OLLAMA_MODELS=qwen3:7b,qwen3:1.7b,llama3.2:latest,qwen2.5:14b,deepseek-r1:14b,mistral
+VITE_OLLAMA_MODELS=qwen3:1.7b,llama3.2:latest,qwen2.5:14b,deepseek-r1:14b,mistral
 ```
 
 ---
@@ -96,7 +96,7 @@ To use TextSpector completely offline with a local model:
    ```bash
    OLLAMA_ORIGINS="*" ollama serve
    ```
-2. Pull your preferred model (e.g. `ollama pull qwen3:7b`).
+2. Pull your preferred model (e.g. `ollama pull qwen3:1.7b`).
 3. Set `VITE_PROVIDER=ollama` in your `.env` file.
 4. Open the application. TextSpector will display the Ollama model selector in the top bar.
 
