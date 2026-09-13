@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Cpu, Server, ExternalLink } from 'lucide-react';
+import { ShieldCheck, Cpu, Server } from 'lucide-react';
 import { APP_CONFIG } from '../config';
 
 interface HeaderProps {

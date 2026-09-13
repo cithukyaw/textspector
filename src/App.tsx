@@ -7,7 +7,7 @@ import { APP_CONFIG } from './config';
 import { DetectorResult } from './types/detector';
 import { detectAiText } from './services/detectorService';
 import { SAMPLE_TEXTS } from './data/sampleTexts';
-import { ShieldCheck, Sparkles, BookOpen, AlertCircle, RefreshCw } from 'lucide-react';
+import { Sparkles, BookOpen } from 'lucide-react';
 
 export default function App() {
   const [text, setText] = useState<string>(SAMPLE_TEXTS[0].text);

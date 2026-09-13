@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Waves, Repeat, HelpCircle, CheckCircle, AlertCircle } from 'lucide-react';
+import { Activity, Waves, Repeat } from 'lucide-react';
 import { DetectorMetrics } from '../types/detector';
 
 interface MetricsGridProps {

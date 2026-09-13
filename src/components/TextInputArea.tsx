@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Trash2, Send, Loader2, FileText, CheckCircle } from 'lucide-react';
+import { Sparkles, Trash2, Loader2, FileText } from 'lucide-react';
 import { SAMPLE_TEXTS, SampleText } from '../data/sampleTexts';
 
 interface TextInputAreaProps {

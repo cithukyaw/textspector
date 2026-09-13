@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Tag, Layers, BarChart2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Tag, Layers, BarChart2 } from 'lucide-react';
 import { ParagraphAnalysis } from '../types/detector';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 

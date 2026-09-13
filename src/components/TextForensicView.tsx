@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, FileText, Highlighter, Check, Copy } from 'lucide-react';
+import { Eye, Check, Copy } from 'lucide-react';
 import { ParagraphAnalysis } from '../types/detector';
 
 interface TextForensicViewProps {

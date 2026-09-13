@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Terminal, Sparkles, Server } from 'lucide-react';
+import { AlertTriangle, Terminal, Sparkles } from 'lucide-react';
 import { APP_CONFIG } from '../config';
 
 interface EnvironmentNoticeProps {
